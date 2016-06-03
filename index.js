@@ -31,6 +31,7 @@ function s3syncer(db, options) {
     , region = options.region === 'us-standard' ? false : options.region
     , secure = options.secure || !('secure' in options)
     , subdomain = region ? 's3-' + region : 's3'
+    , endpoint = options.endpoint || subdomain + '.amazonaws.com'
     , protocol = secure ? 'https' : 'http'
     , prefix = options.prefix || ''
     , hashkey = options.hashKey || function(details) {
@@ -60,9 +61,8 @@ function s3syncer(db, options) {
 
     var destination =
           protocol + '://'
-        + subdomain
-        + '.amazonaws.com/'
-        + options.bucket
+        + endpoint
+        + '/' + options.bucket
         + '/' + relative
 
     hashFile(absolute, destination, function(err, md5) {
